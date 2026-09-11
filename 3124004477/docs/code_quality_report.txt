@@ -1,0 +1,19 @@
+代码质量分析报告
+================
+
+工具    : flake8
+环境    : Python 3.13.1, Windows 10
+命令    : python -m flake8 .
+配置    : .flake8 (max-line-length = 100, exclude: .git / __pycache__ / htmlcov)
+结果    : 0 个警告 (flake8 退出码 0, 无任何输出)
+
+初次扫描发现的问题及处理
+------------------------
+1. similarity.py: F401  'errors.DecodeError' 等三个名字导入但未使用
+   -> 删除该行 import (文件读写相关的异常由 textio.py 负责, 计算模块不需要)
+2. tools/compare_metrics.py: E501  第 34~36 行超过 100 字符
+   -> 把内联条件表达式拆成独立变量与辅助函数 _format()
+
+复现方式
+--------
+    python -m flake8 .
