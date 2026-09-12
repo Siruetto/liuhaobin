@@ -34,9 +34,8 @@ cat samples/ans.txt      # -> 89.12
 ├── samples/                # 自带的样例原文与三种抄袭版
 ├── tests/                  # 45 个单元测试
 ├── tools/
-│   ├── benchmark.py        # 性能对比 + cProfile 热点 + 生成图表
-│   └── compare_metrics.py  # 打印三种归一化口径的重复率, 便于与样例答案核对
-└── docs/                   # PSP 表格、博客草稿、性能与质量报告、图表
+│   └── benchmark.py        # 性能对比 + cProfile 热点 + 生成图表
+└── docs/                   # PSP 表格、性能分析与代码质量报告、图表
 ```
 
 ## 自带样例的期望输出
@@ -80,7 +79,8 @@ python tools/benchmark.py
 
 `重复率 = 2 × LCS(原文, 抄袭版) / (原文长度 + 抄袭版长度) × 100%`，
 LCS 长度用**位并行算法**（大整数位掩码）计算，复杂度 O(n×m/w)，
-比二维动态规划快两个数量级。详见 `docs/blog.md` 第二节。
+比二维动态规划快两个数量级。三代表现对比数据见
+`docs/benchmark_results.txt`，复现方式见 `tools/benchmark.py`。
 
 ## 退出码约定
 
@@ -92,14 +92,3 @@ LCS 长度用**位并行算法**（大整数位掩码）计算，复杂度 O(n×
 | 3 | 输入文件不存在 / 不是普通文件 / 打不开 |
 | 4 | 输入文件编码不受支持（非 UTF-8 / GB18030） |
 | 5 | 答案文件无法写入 |
-
-## 与班级样例核对
-
-如果答案数值与班级样例对不上，很可能是归一化口径不同：
-
-```bash
-python tools/compare_metrics.py <原文> <抄袭版>
-```
-
-它会同时打印 `LCS/原文长度`、`LCS/抄袭版长度`、`2*LCS/(m+n)` 三种口径，
-确认后修改 `similarity.duplication_rate` 中的那一行公式即可。

@@ -9,10 +9,8 @@
 
 初次扫描发现的问题及处理
 ------------------------
-1. similarity.py: F401  'errors.DecodeError' 等三个名字导入但未使用
-   -> 删除该行 import (文件读写相关的异常由 textio.py 负责, 计算模块不需要)
-2. tools/compare_metrics.py: E501  第 34~36 行超过 100 字符
-   -> 把内联条件表达式拆成独立变量与辅助函数 _format()
+similarity.py: F401  'errors.DecodeError' 等三个名字导入但未使用
+  -> 删除该行 import (文件读写相关的异常由 textio.py 负责, 计算模块不需要)
 
 复现方式
 --------
