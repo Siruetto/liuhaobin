@@ -33,7 +33,12 @@ def read_text(path):
 
 
 def write_rate(path, rate):
-    """把重复率写入答案文件, 只写数字, 精确到小数点后两位。"""
+    """把重复率写入答案文件。
+
+    写入的是百分数形式的数字本身, 保留两位小数, 例如 89.12。
+    不加百分号, 也不写别的文字: 答案文件要求是浮点型,
+    混入其它字符会让评测方无法解析。
+    """
     try:
         with open(path, "w", encoding="utf-8") as handle:
             handle.write(format_rate(rate))

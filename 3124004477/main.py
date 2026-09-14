@@ -4,7 +4,8 @@
 
     python main.py <原文文件> <抄袭版论文文件> <答案文件>
 
-三个参数都是文件的绝对路径, 答案文件中的内容形如 ``83.72``。
+三个参数都是文件的绝对路径。答案文件里只写一个百分数(保留两位小数,
+如 83.72, 表示重复率 83.72%), 不加百分号也不写别的文字。
 """
 
 import sys
@@ -17,7 +18,7 @@ USAGE = "用法: python main.py <原文文件> <抄袭版论文文件> <答案�
 
 
 def compute_rate(original_path, copied_path):
-    """读取两篇论文并返回重复率。"""
+    """读取两篇论文并返回重复率, 百分数形式的 0 ~ 100。"""
     original_text = textio.read_text(original_path)
     copied_text = textio.read_text(copied_path)
     return similarity.duplication_rate(original_text, copied_text)
