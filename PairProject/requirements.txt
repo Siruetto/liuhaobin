@@ -1,0 +1,4 @@
+# 运行 main.py 只需要 Python 3 标准库(分数用标准库 fractions, 不引第三方包)。
+# 下面几个包只用于跑单元测试和统计覆盖率:
+pytest>=7.0
+pytest-cov>=4.0

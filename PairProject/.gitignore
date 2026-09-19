@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# 程序运行时在当前目录生成的结果文件
+Exercises.txt
+Answers.txt
+Grade.txt
+
+# 效能分析脚本生成的报告与图
+docs/benchmark_results.txt
+docs/profile_stats.txt
+docs/img/
