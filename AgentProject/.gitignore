@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 运行时产生的数据(待办、对话记忆)和用户文件
+data/*.json
+workspace/*
+!data/.gitkeep
+!workspace/.gitkeep
