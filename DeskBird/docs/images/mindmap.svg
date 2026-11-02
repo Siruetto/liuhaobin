@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560">
+  <rect width="1000" height="560" fill="#FFFFFF"/>
+  <g font-family="PingFang SC, Microsoft YaHei, sans-serif" text-anchor="middle">
+    <rect x="390" y="20" width="220" height="52" rx="10" fill="#FF8C42"/>
+    <text x="500" y="46" fill="#FFFFFF" font-size="18" font-weight="700" dominant-baseline="central">报时鸟 · 需求分析</text>
+
+    <g stroke="#E89A5F" stroke-width="2" fill="none">
+      <line x1="500" y1="72" x2="100" y2="170"/>
+      <line x1="500" y1="72" x2="300" y2="170"/>
+      <line x1="500" y1="72" x2="500" y2="170"/>
+      <line x1="500" y1="72" x2="700" y2="170"/>
+      <line x1="500" y1="72" x2="900" y2="170"/>
+    </g>
+
+    <g>
+      <rect x="25" y="170" width="150" height="46" rx="8" fill="#F6A26B"/>
+      <text x="100" y="193" fill="#5A3A22" font-size="15" font-weight="700" dominant-baseline="central">用户</text>
+      <rect x="225" y="170" width="150" height="46" rx="8" fill="#F6A26B"/>
+      <text x="300" y="193" fill="#5A3A22" font-size="15" font-weight="700" dominant-baseline="central">场景</text>
+      <rect x="425" y="170" width="150" height="46" rx="8" fill="#F6A26B"/>
+      <text x="500" y="193" fill="#5A3A22" font-size="15" font-weight="700" dominant-baseline="central">功能</text>
+      <rect x="625" y="170" width="150" height="46" rx="8" fill="#F6A26B"/>
+      <text x="700" y="193" fill="#5A3A22" font-size="15" font-weight="700" dominant-baseline="central">非功能</text>
+      <rect x="825" y="170" width="150" height="46" rx="8" fill="#F6A26B"/>
+      <text x="900" y="193" fill="#5A3A22" font-size="15" font-weight="700" dominant-baseline="central">约束</text>
+    </g>
+
+    <g stroke="#E89A5F" stroke-width="1.6" fill="none">
+      <line x1="100" y1="216" x2="100" y2="284"/>
+      <line x1="100" y1="216" x2="100" y2="339"/>
+      <line x1="100" y1="216" x2="100" y2="394"/>
+      <line x1="300" y1="216" x2="300" y2="264"/>
+      <line x1="300" y1="216" x2="300" y2="319"/>
+      <line x1="300" y1="216" x2="300" y2="374"/>
+      <line x1="300" y1="216" x2="300" y2="429"/>
+      <line x1="500" y1="216" x2="500" y2="264"/>
+      <line x1="500" y1="216" x2="500" y2="319"/>
+      <line x1="500" y1="216" x2="500" y2="374"/>
+      <line x1="500" y1="216" x2="500" y2="429"/>
+      <line x1="700" y1="216" x2="700" y2="264"/>
+      <line x1="700" y1="216" x2="700" y2="319"/>
+      <line x1="700" y1="216" x2="700" y2="374"/>
+      <line x1="700" y1="216" x2="700" y2="429"/>
+      <line x1="900" y1="216" x2="900" y2="284"/>
+      <line x1="900" y1="216" x2="900" y2="339"/>
+      <line x1="900" y1="216" x2="900" y2="394"/>
+    </g>
+
+    <g fill="#FFF4EC" stroke="#E89A5F" stroke-width="1.5">
+      <rect x="10" y="284" width="180" height="42" rx="8"/>
+      <rect x="10" y="339" width="180" height="42" rx="8"/>
+      <rect x="10" y="394" width="180" height="42" rx="8"/>
+      <rect x="210" y="264" width="180" height="42" rx="8"/>
+      <rect x="210" y="319" width="180" height="42" rx="8"/>
+      <rect x="210" y="374" width="180" height="42" rx="8"/>
+      <rect x="210" y="429" width="180" height="42" rx="8"/>
+      <rect x="410" y="264" width="180" height="42" rx="8"/>
+      <rect x="410" y="319" width="180" height="42" rx="8"/>
+      <rect x="410" y="374" width="180" height="42" rx="8"/>
+      <rect x="410" y="429" width="180" height="42" rx="8"/>
+      <rect x="610" y="264" width="180" height="42" rx="8"/>
+      <rect x="610" y="319" width="180" height="42" rx="8"/>
+      <rect x="610" y="374" width="180" height="42" rx="8"/>
+      <rect x="610" y="429" width="180" height="42" rx="8"/>
+      <rect x="810" y="284" width="180" height="42" rx="8"/>
+      <rect x="810" y="339" width="180" height="42" rx="8"/>
+      <rect x="810" y="394" width="180" height="42" rx="8"/>
+    </g>
+
+    <g fill="#5A3A22" font-size="13">
+      <text x="100" y="305" dominant-baseline="central">大学生</text>
+      <text x="100" y="360" dominant-baseline="central">自习人群</text>
+      <text x="100" y="415" dominant-baseline="central">赶 DDL 人群</text>
+      <text x="300" y="285" dominant-baseline="central">语音记日程</text>
+      <text x="300" y="340" dominant-baseline="central">到点主动提醒</text>
+      <text x="300" y="395" dominant-baseline="central">顺手办事</text>
+      <text x="300" y="450" dominant-baseline="central">健康提醒</text>
+      <text x="500" y="285" dominant-baseline="central">语音交互</text>
+      <text x="500" y="340" dominant-baseline="central">提醒调度</text>
+      <text x="500" y="395" dominant-baseline="central">工具调用</text>
+      <text x="500" y="450" dominant-baseline="central">多端硬件</text>
+      <text x="700" y="285" dominant-baseline="central">提醒准时 ≤5 秒</text>
+      <text x="700" y="340" dominant-baseline="central">断网可用</text>
+      <text x="700" y="395" dominant-baseline="central">隐私本地化</text>
+      <text x="700" y="450" dominant-baseline="central">新手易用</text>
+      <text x="900" y="305" dominant-baseline="central">大模型可选</text>
+      <text x="900" y="360" dominant-baseline="central">离线可演示</text>
+      <text x="900" y="415" dominant-baseline="central">硬件为加分项</text>
+    </g>
+  </g>
+</svg>
