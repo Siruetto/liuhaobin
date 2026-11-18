@@ -14,8 +14,8 @@ CREATE TABLE reminder (
     user_id           INTEGER REFERENCES user(user_id),
     content           TEXT NOT NULL,
     remind_at         TEXT NOT NULL,
-    repeat_type       TEXT NOT NULL DEFAULT 'none'
-                      CHECK (repeat_type IN ('none', 'daily', 'interval')),
+    repeat_type       TEXT NOT NULL DEFAULT 'once'
+                      CHECK (repeat_type IN ('once', 'daily', 'interval')),
     repeat_interval   INTEGER NOT NULL DEFAULT 0,
     status            TEXT NOT NULL DEFAULT 'pending'
                       CHECK (status IN ('pending', 'done')),
