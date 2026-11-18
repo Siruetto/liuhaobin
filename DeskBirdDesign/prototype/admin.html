@@ -61,7 +61,7 @@
     <div class="stats">
       <div class="stat"><div class="n" id="s1">3</div><div class="l">总提醒数</div></div>
       <div class="stat"><div class="n" id="s2">2</div><div class="l">进行中</div></div>
-      <div class="stat"><div class="n">9</div><div class="l">启用工具数</div></div>
+      <div class="stat"><div class="n">10</div><div class="l">启用工具数</div></div>
       <div class="stat"><div class="n">1</div><div class="l">在线设备</div></div>
     </div>
     <div class="card"><h3>今日提醒概览</h3><table id="dash-tb"></table></div>
@@ -100,7 +100,7 @@
 </div>
 
 <script>
-var db=JSON.parse(localStorage.getItem('deskbird_admin')||'{"reminders":[{"content":"周五 22:00 交软工作业","time":"一次性","status":"done"},{"content":"每天 21:00 背单词","time":"每天","status":"pending"},{"content":"每 45 分钟 起来喝水","time":"间隔 45 分钟","status":"pending"}],"tools":[{"name":"calculator","desc":"四则运算（ast 白名单）","on":true},{"name":"todo_*","desc":"待办增 / 查 / 完成","on":true},{"name":"file_*","desc":"workspace 沙箱文件读写","on":true},{"name":"weather","desc":"Open-Meteo 天气","on":true},{"name":"current_time","desc":"当前时间","on":true},{"name":"schedule_query","desc":"课表查询","on":true},{"name":"reminder_*","desc":"提醒增 / 查 / 完成","on":true},{"name":"memory_*","desc":"长期记忆读写","on":true},{"name":"voice_asr/tts","desc":"语音识别与合成","on":true}],"devices":[{"id":"ESP32-A1","name":"书桌音箱","online":true},{"id":"ESP32-A2","name":"宿舍音箱","online":false}],"facts":{"name":"刘浩彬","常提醒":"每天背单词"},"logs":[]}');
+var db=JSON.parse(localStorage.getItem('deskbird_admin')||'{"reminders":[{"content":"周五 22:00 交软工作业","time":"一次性","status":"done"},{"content":"每天 21:00 背单词","time":"每天","status":"pending"},{"content":"每 45 分钟 起来喝水","time":"间隔 45 分钟","status":"pending"}],"tools":[{"name":"calculator","desc":"四则运算（ast 白名单）","on":true},{"name":"todo_add","desc":"添加待办","on":true},{"name":"todo_list","desc":"查看待办","on":true},{"name":"todo_done","desc":"完成待办","on":true},{"name":"file_write","desc":"workspace 内写文件","on":true},{"name":"file_read","desc":"workspace 内读文件","on":true},{"name":"file_list","desc":"列出文件","on":true},{"name":"weather","desc":"Open-Meteo 天气","on":true},{"name":"current_time","desc":"当前时间","on":true},{"name":"schedule_query","desc":"课表查询","on":true}],"devices":[{"id":"ESP32-A1","name":"书桌音箱","online":true},{"id":"ESP32-A2","name":"宿舍音箱","online":false}],"facts":{"name":"刘浩彬","常提醒":"每天背单词"},"logs":[]}');
 function save(){localStorage.setItem('deskbird_admin',JSON.stringify(db));}
 function log(s){db.logs.unshift(new Date().toLocaleTimeString('zh-CN')+' · '+s);db.logs=db.logs.slice(0,20);save();renderLog();}
 function go(id,btn){document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));document.getElementById(id).classList.add('on');document.querySelectorAll('.side button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('title').textContent=btn.textContent.trim().slice(2);}
