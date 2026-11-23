@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>报时鸟 DeskBird</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64"><path d="M20 45c-8-4-12-12-10-21 9 0 17 4 21 12l3 7-4 8-10-6z"/><circle cx="43" cy="19" r="12"/><path class="stitch" d="M43 12v8l6 3"/><path class="beak" d="M22 36l-10 2 8-8z"/></svg>
+        </div>
+        <div><strong>报时鸟</strong><span>DeskBird</span></div>
+      </div>
+      <nav>
+        <button class="nav active" data-view="home"><span>01</span>对话</button>
+        <button class="nav" data-view="schedule"><span>02</span>提醒</button>
+        <button class="nav" data-view="tools"><span>03</span>工具</button>
+        <button class="nav" data-view="memory"><span>04</span>记忆</button>
+      </nav>
+      <div class="rail-note">
+        <span class="signal"></span>
+        <p><strong id="mode">离线模式</strong><br>提醒数据保存在本机</p>
+      </div>
+    </aside>
+
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">ALPHA SPRINT · DESK ASSISTANT</p>
+          <h1>把记性交给机器，<br>把专注留给学习。</h1>
+        </div>
+        <div class="clock-card">
+          <span id="live-date">--</span>
+          <strong id="live-time">--:--</strong>
+          <small>距离下一件事</small>
+          <b id="next-reminder">还没有提醒</b>
+        </div>
+      </header>
+
+      <section class="view active" id="view-home">
+        <div class="chat-panel">
+          <div class="section-head">
+            <div><span class="label">对话</span><h2>说一句，它真的去做</h2></div>
+            <span class="status-chip"><i></i><span id="agent-status">在线</span></span>
+          </div>
+          <div class="chat-log" id="chat-log">
+            <article class="message bot">
+              <div class="avatar">鸟</div>
+              <div class="bubble">
+                <p>你好，我是报时鸟。试试说：<strong>提醒我明天 22:00 交软工作业</strong>。</p>
+                <div class="action-line">提醒会保存到 SQLite，到点主动弹出并播报</div>
+              </div>
+            </article>
+          </div>
+          <div class="suggestions">
+            <button data-prompt="明天有什么课">明天有什么课</button>
+            <button data-prompt="帮我算一下 (3+5)*2">算个式子</button>
+            <button data-prompt="我叫刘浩彬">记住我的名字</button>
+          </div>
+          <form class="composer" id="chat-form">
+            <button class="mic" id="mic" type="button" aria-label="语音输入">
+              <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zm6 9a6 6 0 0 1-12 0M12 18v4m-4 0h8"/></svg>
+            </button>
+            <input id="chat-input" autocomplete="off" placeholder="说一句话，例如：每 45 分钟提醒我起来喝水">
+            <button class="send" type="submit">发送</button>
+          </form>
+        </div>
+        <aside class="today">
+          <div class="section-head compact">
+            <div><span class="label">接下来</span><h2>今日提醒</h2></div>
+            <button class="icon-button" id="open-modal" aria-label="新增提醒">＋</button>
+          </div>
+          <div class="reminder-list" id="reminder-list"></div>
+          <div class="voice-card">
+            <span>语音播报</span>
+            <strong>到点主动开口</strong>
+            <p id="voice-state">点击麦克风说话，识别失败会自动转回文字。</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="view" id="view-schedule">
+        <div class="wide-panel">
+          <div class="section-head">
+            <div><span class="label">日程</span><h2>所有提醒</h2></div>
+            <button class="primary" id="open-modal-2">新增提醒</button>
+          </div>
+          <div class="schedule-grid" id="schedule-grid"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-tools">
+        <div class="wide-panel">
+          <div class="section-head">
+            <div><span class="label">能力</span><h2>9 个原有工具 + 课表查询</h2></div>
+            <span class="count-badge">10 TOOLS</span>
+          </div>
+          <div class="tool-grid" id="tool-grid"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-memory">
+        <div class="wide-panel">
+          <div class="section-head">
+            <div><span class="label">上下文</span><h2>它记住的事</h2></div>
+            <button class="ghost" id="reset-memory">清空记忆</button>
+          </div>
+          <div class="memory-card">
+            <span class="large-number" id="memory-count">0</span>
+            <p>条长期事实</p>
+            <div id="memory-list" class="memory-list"></div>
+          </div>
+          <div class="device-card">
+            <div class="section-head compact">
+              <div><span class="label">设备</span><h2>硬件连接状态</h2></div>
+              <span class="count-badge">ESP32 SIM</span>
+            </div>
+            <div id="device-list" class="device-list"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="reminder-popup hidden" id="reminder-popup" role="dialog" aria-live="assertive">
+    <div class="popup-icon">鸟</div>
+    <p>报时鸟提醒你</p>
+    <h3 id="popup-content">该交作业啦</h3>
+    <div class="popup-actions">
+      <button class="primary" id="popup-done">已完成</button>
+      <button class="ghost" id="popup-snooze">10 分钟后再提醒</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="reminder-modal">
+    <form class="modal-card" id="reminder-form">
+      <div class="section-head compact">
+        <div><span class="label">新增</span><h2>记一件事</h2></div>
+        <button class="icon-button" type="button" id="close-modal">×</button>
+      </div>
+      <label>提醒内容<input name="content" required placeholder="交软工作业"></label>
+      <label>首次时间<input name="remind_at" type="datetime-local" required></label>
+      <label>重复方式
+        <select name="repeat_type" id="repeat-type">
+          <option value="once">一次性</option>
+          <option value="daily">每天</option>
+          <option value="interval">固定间隔</option>
+        </select>
+      </label>
+      <label id="interval-field" class="hidden">间隔分钟<input name="repeat_interval" type="number" min="1" value="45"></label>
+      <button class="primary wide" type="submit">保存提醒</button>
+    </form>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

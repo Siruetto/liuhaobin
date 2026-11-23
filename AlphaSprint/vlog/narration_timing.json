@@ -1,0 +1,63 @@
+{
+  "duration_seconds": 180,
+  "sample_rate": 24000,
+  "channels": 1,
+  "sections": [
+    {
+      "id": 1,
+      "title": "报时鸟 Alpha 冲刺",
+      "start": 0.0,
+      "end": 18.0,
+      "speech_seconds": 9.504
+    },
+    {
+      "id": 2,
+      "title": "冲刺前的问题",
+      "start": 18.0,
+      "end": 41.0,
+      "speech_seconds": 15.792
+    },
+    {
+      "id": 3,
+      "title": "七人协作",
+      "start": 41.0,
+      "end": 64.0,
+      "speech_seconds": 15.864
+    },
+    {
+      "id": 4,
+      "title": "十四天计划",
+      "start": 64.0,
+      "end": 86.0,
+      "speech_seconds": 15.696
+    },
+    {
+      "id": 5,
+      "title": "真实产品演示",
+      "start": 86.0,
+      "end": 122.0,
+      "speech_seconds": 24.456
+    },
+    {
+      "id": 6,
+      "title": "实际架构与测试",
+      "start": 122.0,
+      "end": 147.0,
+      "speech_seconds": 16.56
+    },
+    {
+      "id": 7,
+      "title": "问题、协作与复盘",
+      "start": 147.0,
+      "end": 170.0,
+      "speech_seconds": 15.36
+    },
+    {
+      "id": 8,
+      "title": "下一轮冲刺",
+      "start": 170.0,
+      "end": 180.0,
+      "speech_seconds": 8.496
+    }
+  ]
+}

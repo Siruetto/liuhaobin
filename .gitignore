@@ -1,2 +1,10 @@
 .DS_Store
 *.db
+__pycache__/
+*.py[cod]
+DeskBirdApp/data/*.json
+DeskBirdApp/data/**/*.json
+AlphaSprint/.codex-finalizer/
+AlphaSprint/.chart-data-*/
+AlphaSprint/build/deck/
+AlphaSprint/vlog/audio/

@@ -1,0 +1,22 @@
+{
+  "title": "报时鸟 DeskBird",
+  "status": {
+    "mode": "offline",
+    "version": "0.1.0-alpha.1",
+    "server_time": "2026-11-23 16:00:37",
+    "pending_reminders": 3,
+    "tools": 10,
+    "devices_online": 1
+  },
+  "toolCount": 10,
+  "reminderCount": 6,
+  "viewport": [
+    1440,
+    900
+  ],
+  "documentSize": [
+    1440,
+    900
+  ],
+  "horizontalOverflow": false
+}

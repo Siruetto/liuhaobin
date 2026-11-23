@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>报时鸟 Alpha 冲刺 Vlog</title>
+  <style>
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #101815; }
+    canvas { width: 100vw; height: 100vh; object-fit: contain; }
+    #status { position: fixed; left: 16px; bottom: 16px; color: #fff; font: 12px sans-serif; }
+  </style>
+</head>
+<body>
+  <canvas id="stage" width="1280" height="720"></canvas>
+  <div id="status">准备录制</div>
+  <script>
+    const canvas = document.getElementById("stage");
+    const ctx = canvas.getContext("2d");
+    const status = document.getElementById("status");
+    const W = 1280;
+    const H = 720;
+    const C = {
+      ink: "#17201D",
+      ink2: "#223B34",
+      paper: "#F4EFE6",
+      card: "#FFFDF8",
+      orange: "#F26A2E",
+      orange2: "#FFB68E",
+      teal: "#2D6F63",
+      line: "#DED7CA",
+      white: "#FFFFFF",
+      muted: "#6D756F",
+    };
+    let images = {};
+    let timing = null;
+
+    function loadImage(name, src) {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => {
+          images[name] = image;
+          resolve();
+        };
+        image.onerror = reject;
+        image.src = src;
+      });
+    }
+
+    function roundRect(x, y, w, h, radius, fill, stroke = null) {
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, h, radius);
+      ctx.fillStyle = fill;
+      ctx.fill();
+      if (stroke) {
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    }
+
+    function text(value, x, y, size, color = C.ink, weight = 400, align = "left") {
+      ctx.fillStyle = color;
+      ctx.font = `${weight} ${size}px "Noto Sans SC", "Microsoft YaHei"`;
+      ctx.textAlign = align;
+      ctx.textBaseline = "top";
+      ctx.fillText(value, x, y);
+    }
+
+    function wrapText(value, x, y, maxWidth, lineHeight, size, color, weight = 400) {
+      ctx.fillStyle = color;
+      ctx.font = `${weight} ${size}px "Noto Sans SC", "Microsoft YaHei"`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
+      const chars = Array.from(value);
+      let line = "";
+      let currentY = y;
+      for (const char of chars) {
+        const candidate = line + char;
+        if (ctx.measureText(candidate).width > maxWidth && line) {
+          ctx.fillText(line, x, currentY);
+          line = char;
+          currentY += lineHeight;
+        } else {
+          line = candidate;
+        }
+      }
+      if (line) ctx.fillText(line, x, currentY);
+    }
+
+    function background() {
+      const gradient = ctx.createLinearGradient(0, 0, W, H);
+      gradient.addColorStop(0, "#F7F2E9");
+      gradient.addColorStop(1, "#EAE3D7");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function darkBackground() {
+      const gradient = ctx.createLinearGradient(0, 0, W, H);
+      gradient.addColorStop(0, "#17201D");
+      gradient.addColorStop(1, "#253B34");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function header(eyebrow, title, subtitle = "") {
+      text(eyebrow, 64, 44, 18, C.orange, 700);
+      text(title, 64, 88, 44, C.ink, 700);
+      if (subtitle) wrapText(subtitle, 66, 150, 1140, 34, 22, C.muted);
+    }
+
+    function drawImageCover(image, x, y, w, h, radius = 20) {
+      const scale = Math.max(w / image.width, h / image.height);
+      const sw = w / scale;
+      const sh = h / scale;
+      const sx = (image.width - sw) / 2;
+      const sy = (image.height - sh) / 2;
+      roundRect(x, y, w, h, radius, "#fff");
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, h, radius);
+      ctx.clip();
+      ctx.drawImage(image, sx, sy, sw, sh, x, y, w, h);
+      ctx.restore();
+    }
+
+    function fade(t, start, end, duration = 0.6) {
+      return Math.min(
+        1,
+        Math.max(0, (t - start) / duration),
+        Math.max(0, (end - t) / duration),
+      );
+    }
+
+    function drawSectionBadge(section, t) {
+      const number = String(section.id).padStart(2, "0");
+      text(`${number} / 08`, 1080, 44, 16, C.teal, 700, "right");
+    }
+
+    function drawIntro(t, section) {
+      darkBackground();
+      ctx.fillStyle = C.orange;
+      ctx.fillRect(950, 0, 330, H);
+      text("DESK BIRD", 72, 56, 20, C.orange2, 700);
+      text("报时鸟", 72, 186, 76, C.white, 700);
+      text("ALPHA 冲刺总结", 76, 286, 38, C.orange2, 700);
+      wrapText(
+        "说一句就记，到点主动开口。\n从一个设计原型，走到可运行、可测试、可演示的产品。",
+        78,
+        362,
+        720,
+        44,
+        27,
+        "#DDE9E4",
+      );
+      text("报时鸟团队 · 7 人", 78, 560, 21, "#B7C5C0", 600);
+      text("2026-11-23 — 12-06", 78, 594, 21, "#B7C5C0");
+      drawSectionBadge(section, t);
+    }
+
+    function drawProblem(t, section) {
+      background();
+      header(
+        "01 / 冲刺前的问题",
+        "设计完整，不等于产品已经能执行",
+        "100 份调研、需求、UML、原型都已完成；冲刺要补上真实动作证据。",
+      );
+      const items = [
+        ["静态原型", "工具调用只在页面里模拟", "缺少真实后端"],
+        ["设计完成", "提醒入库、重排、触发未落地", "缺少事件闭环"],
+        ["目标明确", "断网、语音失败和安全分支", "缺少可复现验收"],
+      ];
+      items.forEach(([label, title, detail], i) => {
+        const x = 64 + i * 392;
+        roundRect(x, 247, 356, 320, 24, i === 1 ? "#FFF2E9" : C.card, i === 1 ? C.orange : C.line);
+        text(label, x + 26, 274, 18, i === 1 ? C.orange : C.teal, 700);
+        wrapText(title, x + 26, 326, 300, 38, 28, C.ink, 700);
+        text(detail, x + 26, 500, 19, C.muted);
+      });
+      drawSectionBadge(section, t);
+    }
+
+    function drawTeam(t, section) {
+      background();
+      header(
+        "02 / 七人协作",
+        "计划权重合计 100%，实际工作量用证据结算",
+        "Day 1 只记录已经发生的工作；完整 Sprint 结束后由日志、提交和 Vlog 共同核算。",
+      );
+      const members = [
+        ["刘浩彬", "架构 / 后端", "28"],
+        ["李彦峰", "后端 / 运维", "14"],
+        ["段旷卓", "前端", "14"],
+        ["曲浩宾", "前端 / 文档", "12"],
+        ["邓家俊", "PM / 测试", "12"],
+        ["李忠林", "测试 / 演示", "10"],
+        ["刘俊宁", "测试 / 文档", "10"],
+      ];
+      members.forEach(([name, role, share], i) => {
+        const col = i % 2;
+        const row = Math.floor(i / 2);
+        const x = 64 + col * 574;
+        const y = 226 + row * 104;
+        roundRect(x, y, 548, 84, 18, C.card, C.line);
+        text(name, x + 22, y + 16, 21, C.ink, 700);
+        text(role, x + 150, y + 18, 17, C.teal);
+        text(`${share}%`, x + 474, y + 11, 30, C.orange, 700, "right");
+      });
+      drawSectionBadge(section, t);
+    }
+
+    function drawPlan(t, section) {
+      background();
+      header(
+        "03 / 十四天计划",
+        "前半程打通闭环，中段加语音，后段回归与发布",
+        "Day 7 和 Day 10 各设一次完整回归，避免最后一天集中联调。",
+      );
+      const phases = [
+        ["D1-3", "提醒、API、记忆", "核心链路可运行"],
+        ["D4-6", "语音、播报、后台", "完整演示"],
+        ["D7-10", "安全、响应式、验收", "端到端回归"],
+        ["D11-14", "硬件、部署、Vlog", "Alpha 发布"],
+      ];
+      phases.forEach(([days, task, output], i) => {
+        const x = 64 + i * 292;
+        roundRect(x, 240, 266, 250, 22, C.card, C.line);
+        text(days, x + 22, 264, 28, C.orange, 700);
+        wrapText(task, x + 22, 322, 220, 34, 21, C.ink, 700);
+        text(output, x + 22, 444, 17, C.muted);
+      });
+      const points = [
+        [660, 584, "Day 1"],
+        [790, 460, "Day 7"],
+        [930, 330, "Day 10"],
+        [1110, 238, "Day 14"],
+      ];
+      ctx.strokeStyle = C.teal;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(620, 600);
+      points.forEach(([x, y]) => ctx.lineTo(x, y));
+      ctx.stroke();
+      points.forEach(([x, y, label]) => {
+        ctx.beginPath();
+        ctx.arc(x, y, 10, 0, Math.PI * 2);
+        ctx.fillStyle = C.orange;
+        ctx.fill();
+        text(label, x, y - 34, 15, C.ink, 700, "center");
+      });
+      drawSectionBadge(section, t);
+    }
+
+    function drawDemo(t, section) {
+      background();
+      header(
+        "04 / 真实产品演示",
+        "说话 → 解析 → SQLite → 到点主动开口",
+        "这是网页真实截图；提醒不是静态卡片，而是 Scheduler 的实际触发结果。",
+      );
+      const usePopup = t % 10 > 5;
+      drawImageCover(
+        images[usePopup ? "popup" : "home"],
+        64,
+        207,
+        780,
+        438,
+        24,
+      );
+      roundRect(872, 216, 344, 94, 20, "#FFF1E8", C.orange);
+      text("一次提醒", 898, 234, 16, C.orange, 700);
+      text("按一次就真的落库", 898, 262, 22, C.ink, 700);
+      const steps = [
+        ["01", "意图解析", "日期、时间、内容、重复规则"],
+        ["02", "SQLite", "重启后仍能查询"],
+        ["03", "主动弹窗", "到期扫描后显示气泡"],
+        ["04", "语音 + 操作", "完成或推迟 10 分钟"],
+      ];
+      steps.forEach(([n, title, detail], i) => {
+        const y = 334 + i * 78;
+        text(n, 886, y, 16, C.orange, 700);
+        text(title, 930, y - 2, 20, C.ink, 700);
+        text(detail, 930, y + 28, 15, C.muted);
+      });
+      drawSectionBadge(section, t);
+    }
+
+    function drawArchitecture(t, section) {
+      background();
+      header(
+        "05 / 架构与测试",
+        "复用四个，新增三个，工具数仍是十",
+        "服务端 Python 标准库，前端原生网页；无第三方运行依赖。",
+      );
+      drawImageCover(images.tools, 64, 220, 650, 375, 24);
+      const metrics = [
+        ["26", "自动化测试"],
+        ["10", "工具"],
+        ["0", "运行依赖"],
+      ];
+      metrics.forEach(([value, label], i) => {
+        const y = 225 + i * 116;
+        roundRect(756, y, 456, 94, 18, C.card, C.line);
+        text(value, 780, y + 13, 40, C.orange, 700);
+        text(label, 910, y + 28, 22, C.ink, 700);
+      });
+      text("Agent · Planner · ToolBox · Memory", 760, 590, 17, C.teal, 700);
+      text("+ Scheduler · Voice · Device", 760, 620, 17, C.orange, 700);
+      drawSectionBadge(section, t);
+    }
+
+    function drawEvidence(t, section) {
+      background();
+      header(
+        "06 / 问题、协作与复盘",
+        "GitHub 合并记录和每日日志，替代口头的“我们沟通过”",
+        "这里展示真实统一口径记录；Day 2-14 的原始视频仍由团队每天补录。",
+      );
+      roundRect(64, 220, 530, 378, 24, "#1F342E");
+      text("Git 协作证据", 92, 246, 24, C.orange2, 700);
+      const commits = [
+        "75454b4  Merge PR #8 · Curry-fff",
+        "a808b30  Merge PR #9 · Duan-12345",
+        "10ac7ee  Merge PR #7 · Duan-12345",
+        "d86e042  Merge PR #5 · Joker-Deng",
+        "eb9ca12  刘俊宁提交开发计划与分工",
+      ];
+      commits.forEach((line, i) => {
+        text(line, 92, 306 + i * 54, 16, "#DCE7E2");
+      });
+      roundRect(624, 220, 588, 378, 24, C.card, C.line);
+      text("Day 1 · 真实交付", 652, 246, 24, C.teal, 700);
+      const items = [
+        "提醒调度 + SQLite",
+        "真实网页 + 主动弹窗",
+        "10 工具口径保持不变",
+        "26 个自动化测试通过",
+        "一键验收脚本可复现",
+      ];
+      items.forEach((item, i) => {
+        ctx.beginPath();
+        ctx.arc(666, 318 + i * 54, 8, 0, Math.PI * 2);
+        ctx.fillStyle = C.orange;
+        ctx.fill();
+        text(item, 692, 304 + i * 54, 19, C.ink, 600);
+      });
+      drawSectionBadge(section, t);
+    }
+
+    function drawClosing(t, section) {
+      darkBackground();
+      text("DESK BIRD", 72, 60, 18, C.orange2, 700);
+      text("Alpha 版本", 72, 150, 36, "#DDE9E4", 700);
+      text("已经能跑", 72, 202, 66, C.white, 700);
+      text("能说、会做、到点开口", 74, 310, 34, C.orange2, 700);
+      roundRect(72, 420, 760, 118, 22, "#263B35", "#45665B");
+      text("verify_alpha.ps1  →  26 tests  →  10 tools", 98, 446, 20, C.white, 600);
+      text("GitHub  /  Siruetto/liuhaobin", 98, 486, 20, "#BFD1CB");
+      wrapText(
+        "真实视频、成员体会和硬件记录\n在冲刺结束前补齐",
+        900,
+        260,
+        300,
+        45,
+        26,
+        "#FFD4BE",
+        700,
+      );
+      text("谢谢大家", 900, 560, 24, "#A9BBB4");
+      drawSectionBadge(section, t);
+    }
+
+    function draw(t) {
+      const section = timing.sections.find((item) => t >= item.start && t < item.end)
+        || timing.sections[timing.sections.length - 1];
+      if (section.id === 1) drawIntro(t, section);
+      else if (section.id === 2) drawProblem(t, section);
+      else if (section.id === 3) drawTeam(t, section);
+      else if (section.id === 4) drawPlan(t, section);
+      else if (section.id === 5) drawDemo(t, section);
+      else if (section.id === 6) drawArchitecture(t, section);
+      else if (section.id === 7) drawEvidence(t, section);
+      else drawClosing(t, section);
+
+      const progress = Math.min(1, t / timing.duration_seconds);
+      ctx.fillStyle = "rgba(255,255,255,.28)";
+      ctx.fillRect(64, 686, 1152, 3);
+      ctx.fillStyle = C.orange;
+      ctx.fillRect(64, 686, 1152 * progress, 3);
+      text(`${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`, 1216, 671, 15, C.muted, 700, "right");
+    }
+
+    async function loadAssets() {
+      timing = await fetch("/vlog/narration_timing.json").then((r) => r.json());
+      await Promise.all([
+        loadImage("home", "/assets/01-对话与提醒.png"),
+        loadImage("popup", "/assets/05-主动提醒弹窗.png"),
+        loadImage("tools", "/assets/03-十个工具.png"),
+      ]);
+    }
+
+    window.startVlog = async () => {
+      if (!timing) await loadAssets();
+      const audioResponse = await fetch("/vlog/audio/narration.wav");
+      const arrayBuffer = await audioResponse.arrayBuffer();
+      const audioContext = new AudioContext();
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer.slice(0));
+      const source = audioContext.createBufferSource();
+      source.buffer = audioBuffer;
+      const destination = audioContext.createMediaStreamDestination();
+      source.connect(destination);
+
+      const canvasStream = canvas.captureStream(30);
+      const stream = new MediaStream([
+        canvasStream.getVideoTracks()[0],
+        destination.stream.getAudioTracks()[0],
+      ]);
+      const mimeType = MediaRecorder.isTypeSupported(
+        "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+      )
+        ? "video/mp4;codecs=avc1.42E01E,mp4a.40.2"
+        : "video/webm;codecs=vp9,opus";
+      const recorder = new MediaRecorder(stream, {
+        mimeType,
+        videoBitsPerSecond: 2500000,
+        audioBitsPerSecond: 128000,
+      });
+      const chunks = [];
+      recorder.ondataavailable = (event) => {
+        if (event.data.size) chunks.push(event.data);
+      };
+      const completed = new Promise((resolve) => {
+        recorder.onstop = () => {
+          const blob = new Blob(chunks, {type: mimeType});
+          const extension = mimeType.startsWith("video/mp4") ? "mp4" : "webm";
+          const anchor = document.createElement("a");
+          anchor.download = `报时鸟-Alpha冲刺Vlog.${extension}`;
+          anchor.href = URL.createObjectURL(blob);
+          document.body.appendChild(anchor);
+          anchor.click();
+          resolve({mimeType, bytes: blob.size, extension});
+        };
+      });
+
+      await audioContext.resume();
+      recorder.start(1000);
+      source.start();
+      const start = performance.now();
+      status.textContent = "录制中";
+      const timer = setInterval(() => {
+        const current = Math.min(
+          timing.duration_seconds,
+          (performance.now() - start) / 1000,
+        );
+        draw(current);
+      }, 1000 / 30);
+      draw(0);
+      setTimeout(() => {
+        clearInterval(timer);
+        draw(timing.duration_seconds);
+        source.stop();
+        recorder.stop();
+        status.textContent = "录制完成";
+      }, timing.duration_seconds * 1000);
+      const result = await completed;
+      await audioContext.close();
+      window.vlogResult = result;
+      return result;
+    };
+
+    loadAssets().then(() => {
+      draw(0);
+      status.textContent = "素材已加载";
+      window.assetsReady = true;
+    }).catch((error) => {
+      status.textContent = `加载失败: ${error}`;
+      window.assetError = String(error);
+    });
+  </script>
+</body>
+</html>
