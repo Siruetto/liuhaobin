@@ -5,10 +5,10 @@
 | 评分项 | 交付物 | 状态 |
 | --- | --- | --- |
 | 冲刺计划 15 分 | `01-冲刺计划.md` | 已完成计划主体，Day 1 实际数据已填 |
-| Vlog 25 分 | `vlog/` | 剪辑工程与旁白脚本已完成，真实成员录像待补 |
+| Vlog 25 分 | `vlog/` | 3 分钟成片已完成；真实成员录像待团队补录并替换 |
 | 冲刺总结 60 分 | `02-冲刺总结.md` | 结构与实际完成项已完成，14 天收尾数据和成员亲笔心得待补 |
 | PPT | `PPT/报时鸟-Alpha冲刺答辩.pptx` | 由答辩内容生成 |
-| Release | `release-notes-v0.1.0-alpha.1.md` | 发布说明已完成，Tag 与 GitHub Release 待授权推送 |
+| Release | [v0.1.0-alpha.1](https://github.com/Siruetto/liuhaobin/releases/tag/v0.1.0-alpha.1) | Tag 与 GitHub 预发布 Release 已发布 |
 | 可复现项目 | `../DeskBirdApp/` | 网页、API、SQLite、提醒、语音降级、26 个测试已完成 |
 
 ## 需求对应
